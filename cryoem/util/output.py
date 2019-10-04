@@ -1,4 +1,6 @@
-import sys, cPickle
+import sys
+import _pickle as cPickle
+
 
 class OutputStream():
     "An output stream, for redirecting print statements. Contains a file object and flushes after each write"

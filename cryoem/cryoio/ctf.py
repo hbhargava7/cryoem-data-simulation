@@ -1,7 +1,6 @@
 from util import memoize
 import geom
 import numpy as n
-import exceptions
 
 def envelope_function(freq_radius,bfactor):
     logenv = -(bfactor/4.0)*freq_radius**2
@@ -95,7 +94,7 @@ if __name__ == '__main__':
     v2 = compute_ctf(rotfcoords,None,akv,cs,wgh,df1,df2,angast,dscale).reshape((-1,))
 
     # This being small confirms that using the rots parameter is equivalent to rotating the coordinates
-    print n.abs(v1-v2).max()
+    print(n.abs(v1-v2).max())
     
 
     N = 512
@@ -115,7 +114,7 @@ if __name__ == '__main__':
     relerr = n.abs(roterr)/n.maximum(n.abs(ctf1_rot),n.abs(ctf2_rot))
     
     # This being small confirms that compute_inplane_rotmatrix and rots use the same rotation convention 
-    print relerr.max(), relerr.mean()
+    print(relerr.max(), relerr.mean())
     
     
         

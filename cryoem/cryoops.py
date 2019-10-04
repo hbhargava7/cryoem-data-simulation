@@ -1,7 +1,7 @@
 import geom
 import numpy as n
 
-import pyximport; pyximport.install(setup_args={"include_dirs":n.get_include()},reload_support=True)
+# import pyximport; pyximport.install(setup_args={"include_dirs":n.get_include()},reload_support=True)
 import sincint
 
 precomputed_Rs = {}
@@ -63,9 +63,8 @@ def compute_shift_phases(pts,N,rad):
     return S
 
 def compute_premultiplier(N, kernel, kernsize, scale=512):
-    krange = N/2
-    koffset = (N/2)*scale
-
+    krange = int(N/2)
+    koffset = int((N/2)*scale)
     x = n.arange(-scale*krange,scale*krange)/float(scale)
 
     if kernel == 'lanczos':
@@ -84,7 +83,7 @@ def compute_premultiplier(N, kernel, kernsize, scale=512):
         assert False, 'Unknown kernel type'
 
     sk = n.fft.fftshift(n.fft.ifft(n.fft.ifftshift(k))).real
-    premult = 1.0/(N*sk[(koffset-krange):(koffset+krange)])
+    premult = 1.0/(N*sk[int(koffset-krange):int(koffset+krange)])
     
     return premult
 
@@ -98,6 +97,7 @@ if __name__ == '__main__':
     pm1 = compute_premultiplier(N,kern,kernsize,512)
     pm2 = compute_premultiplier(N,kern,kernsize,8192)
     
-    print n.max(n.abs(pm1-pm2))
+    print(n.max(n.abs(pm1-pm2)))
+    
 
 
