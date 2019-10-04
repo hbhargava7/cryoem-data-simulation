@@ -21,7 +21,7 @@
 
 import numpy as n
 cimport numpy as n
-from geom import *
+# from geom import *
 import scipy.sparse as sp
 
 DTYPE = n.float32
@@ -201,6 +201,41 @@ cdef void floor_vec(DTYPE_t[:] p, ITYPE_t[:] pi) nogil:
     
     for i in xrange(p.shape[0]):
         pi[i] = <ITYPE_t>floor(p[i])
+
+def gencoords_base (N,d):
+    x = n.arange(-N/2,N/2,dtype=n.float32)
+    c = x.copy()
+    for i in range(1,d):
+        c = n.column_stack([n.repeat(c, N, axis=0), n.tile(x, N**i)])
+
+    return c
+
+def gencoords (N,d,rad=None,truncmask=False,trunctype='circ'):
+    """ generate coordinates of all points in an NxN..xN grid with d dimensions 
+    coords in each dimension are [-N/2, N/2) 
+    N should be even"""
+    
+    if not truncmask:
+        _,truncc,_ = gencoords(N,d,rad,True)
+        return truncc
+    
+    c = gencoords_base(N,d)
+
+    if rad is not None:
+        if trunctype == 'circ':
+            r2 = n.sum(c**2,axis=1)
+            trunkmask = r2 < (rad*N/2.0)**2
+        elif trunctype == 'square':
+            r = n.max(n.abs(c),axis=1)
+            trunkmask = r < (rad*N/2.0)
+            
+        truncc = c[trunkmask,:]
+    else:
+        trunkmask = n.ones((c.shape[0],),dtype=n.bool8)
+        truncc = c
+ 
+    
+    return c,truncc,trunkmask
 
 def compute_interpolation_matrix(DTYPE_t[:,:,:] Rs, int N_dst, int N_src, float rad,
                                  kernel, int kernsize,
@@ -638,3 +673,4 @@ def genfulltotrunc (N=128, rad=0.3):
     """ Generates a sparse matrix operator that maps full N**2 vector into truncated image fourier coefficients (R) """
     return gentrunctofull(N,rad).T
 
+ 
