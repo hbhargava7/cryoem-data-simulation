@@ -98,6 +98,7 @@ def main(args):
 	lastChunkSize = params['n_particles'] - ((nChunks - 1)*1000)
 
 	for i in range(nChunks):
+		ticc = time.time()
 		if i == nChunks - 1:
 			chunkSize = lastChunkSize
 		else:
@@ -129,7 +130,7 @@ def main(args):
 
 		results.extend(output)
 
-		print("\nDone simulating stack %d of size %d in time %s." % (i, chunkSize, format_timedelta(time.time() - tic)))
+		print("\nDone simulating stack %d of size %d in time %s." % (i, chunkSize, format_timedelta(time.time() - ticc)))
 
 	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
 
