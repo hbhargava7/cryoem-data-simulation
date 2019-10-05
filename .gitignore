@@ -4,3 +4,7 @@ __pycache__
 test_data/*
 .ipynb_checkpoints
 output/*
+
+/.browsercache.json
+/.eman2settings.json
+/.gitignore.swp
