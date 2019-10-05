@@ -4,6 +4,7 @@ import time
 import numpy as n
 import argparse
 import math
+import resource
 
 import multiprocessing as mp
 
@@ -29,8 +30,10 @@ from matplotlib.colors import LogNorm
 
 # For parallel https://stackoverflow.com/questions/15639779/why-does-multiprocessing-use-only-a-single-core-after-i-import-numpy
 os.environ["OPENBLAS_MAIN_FREE"] = "1"
-import resource
+
+# Set the files open limit (must exceed the simulation chunk size)
 resource.setrlimit(resource.RLIMIT_NOFILE, (1100, 1100))
+
 # matplotlib configuration
 mpl.rcParams['figure.dpi'] = 100
 plt.style.use(['dark_background'])
@@ -105,7 +108,11 @@ def main(args):
 		output = manager.list()
 
 		jobs = []
-		concurrency = mp.cpu_count()
+		concurrency = mp.cpu_count() - 1
+
+		if args.cpus is not None:
+			concurrency = args.cpus
+
 		sema = mp.Semaphore(concurrency)
 
 		print("\nSimulating %d particles on %d processors." % (params['n_particles'], concurrency))
@@ -232,5 +239,7 @@ if __name__ == "__main__":
 	parser.add_argument("--n_particles", help="number of particles to simulate", type=int)
 	parser.add_argument("--sigma_noise", help="noise stdev", type=float)
 	parser.add_argument("--snr", help="signal to noise ratio", type=float)
+	parser.add_argument("--cpus", help="number of processors to use", type=int)
+
 
 	sys.exit(main(parser.parse_args()))
