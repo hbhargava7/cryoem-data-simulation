@@ -3,6 +3,7 @@ import os
 import time
 import numpy as n
 import argparse
+import math
 
 import multiprocessing as mp
 
@@ -29,7 +30,7 @@ from matplotlib.colors import LogNorm
 # For parallel https://stackoverflow.com/questions/15639779/why-does-multiprocessing-use-only-a-single-core-after-i-import-numpy
 os.environ["OPENBLAS_MAIN_FREE"] = "1"
 import resource
-resource.setrlimit(resource.RLIMIT_NOFILE, (20000, 20000))
+resource.setrlimit(resource.RLIMIT_NOFILE, (1100, 1100))
 # matplotlib configuration
 mpl.rcParams['figure.dpi'] = 100
 plt.style.use(['dark_background'])
@@ -88,32 +89,50 @@ def main(args):
 	
 	tic = time.time()
 
-	# PROCESS IMPLEMENTATION
-	manager = mp.Manager()
-	output = manager.list()
+	results = []
 
-	jobs = []
-	concurrency = mp.cpu_count()
-	sema = mp.Semaphore(concurrency)
+	nChunks = math.ceil(params['n_particles'] / 1000)
+	lastChunkSize = params['n_particles'] - ((nChunks - 1)*1000)
 
-	for i in range(params['n_particles']):
-		sema.acquire()
-		p = mp.Process(target=simulateParticle, args=(output, params, V, TtoF, i, tic, sema))
-		jobs.append(p)
-		p.start()
+	for i in range(nChunks):
+		if i == nChunks - 1:
+			chunkSize = lastChunkSize
+		else:
+			chunkSize = 1000
 
-	for proc in jobs:
-		proc.join()
+		# PROCESS IMPLEMENTATION
+		manager = mp.Manager()
+		output = manager.list()
 
-	print("\nDone simulating in: %s" % format_timedelta(time.time() - tic))
+		jobs = []
+		concurrency = mp.cpu_count()
+		sema = mp.Semaphore(concurrency)
 
-	results = output
+		print("\nSimulating %d particles on %d processors." % (params['n_particles'], concurrency))
+
+		for j in range(chunkSize):
+			idx = i * chunkSize + j
+			sema.acquire()
+			p = mp.Process(target=simulateParticle, args=(output, params, V, TtoF, idx, tic, sema))
+			jobs.append(p)
+			p.start()
+
+		for proc in jobs:
+			proc.join()
+
+		results.extend(output)
+
+		print("\nDone simulating stack %d of size %d in time %s." % (i, chunkSize, format_timedelta(time.time() - tic)))
+
+	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
+
 	results = sorted(results, key=lambda x: x[0])
 
 	particles = [result[1] for result in results]
 	starfile = [result[2] for result in results]
 
 	print('\nWriting out data...')
+
 	# Plot the first 8 images
 	fig = plt.figure(figsize=(12, 5))
 	col = 4
@@ -200,7 +219,7 @@ def simulateParticle(output,params, V, TtoF,i,tic, sema):
 					 str(0),
 					 str(params['spherical_abberr']),
 					 str(params['accel_kv'])]
-	# global results
+
 	output.append( (i, particle, starfile_line))
 	sema.release()
 
