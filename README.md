@@ -26,6 +26,8 @@ Other Flags:
 * `simulated_particles.star`: Relion star file describing the simulated particles
 * `plot.png`: Visualization of the first 8 particles
 
+![plot example](reference/plot.png)
+
 ### To compile the pyx files (in cryoem-cython-pyx)
 Compile using `clang` or `gcc` and then either move or symlink the `.so` files into the `cryoem` directory.
 *For macOS*
