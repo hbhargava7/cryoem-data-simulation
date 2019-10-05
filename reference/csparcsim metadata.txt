@@ -1,0 +1,798 @@
+{
+  "_id": {
+    "_str": "5d891e652df34e1e74de78c2"
+  },
+  "created_at": "2019-09-23T19:35:01.489Z",
+  "deleted": false,
+  "project_uid": "P2",
+  "status": "completed",
+  "type": "simulator",
+  "uid": "J194",
+  "workspace_uids": [
+    "W7"
+  ],
+  "children": [
+    "J212",
+    "J211"
+  ],
+  "cloned_from": null,
+  "parents": [
+    "J186"
+  ],
+  "title": "WT 0.5 1",
+  "ui_tile_height": 1,
+  "ui_tile_images": [
+    {
+      "num_rows": 1,
+      "num_cols": 2,
+      "name": "particles",
+      "fileid": "5d8920081f65df29d6f3785d"
+    }
+  ],
+  "ui_tile_width": 2,
+  "job_type": "simulator",
+  "is_experiment": false,
+  "experiment_worker_path": null,
+  "output_group_images": {
+    "particles": "5d8920081f65df29d6f3785f"
+  },
+  "queue_status": null,
+  "completed_at": "2019-09-23T19:42:00.821Z",
+  "started_at": "2019-09-23T19:35:25.696Z",
+  "waiting_at": null,
+  "interactive_port": null,
+  "params_spec": {
+    "n_rs": {
+      "value": 16
+    },
+    "n_particles": {
+      "value": 8000
+    },
+    "df_min": {
+      "value": 10000
+    }
+  },
+  "created_by_user_id": "5d78319a1f65df6b06f215d7",
+  "input_slot_groups": [
+    {
+      "name": "volume",
+      "title": "Volume",
+      "repeat_allowed": false,
+      "connections": [
+        {
+          "slots": [
+            {
+              "job_uid": "J186",
+              "slot_name": "map",
+              "version": "F",
+              "result_name": "map",
+              "group_name": "imported_volume",
+              "result_type": "volume.blob"
+            }
+          ],
+          "job_uid": "J186",
+          "group_name": "imported_volume"
+        }
+      ],
+      "count_max": 2,
+      "slots": [
+        {
+          "optional": true,
+          "type": "volume.blob",
+          "description": "",
+          "name": "map",
+          "title": "Map"
+        }
+      ],
+      "type": "volume",
+      "count_min": 1,
+      "description": ""
+    }
+  ],
+  "params_base": {
+    "local_extent": {
+      "title": "Rotation between two bodies (deg)",
+      "section": "sim",
+      "value": 40,
+      "hidden": false,
+      "type": "number",
+      "order": 6,
+      "advanced": false,
+      "desc": ""
+    },
+    "df_min": {
+      "title": "Minimum Defocus Value (A)",
+      "section": "ctf",
+      "value": 15000,
+      "hidden": false,
+      "type": "number",
+      "order": 15,
+      "advanced": false,
+      "desc": ""
+    },
+    "force_single_rot": {
+      "title": "Force No Rotation",
+      "section": "sim",
+      "value": false,
+      "hidden": false,
+      "type": "boolean",
+      "order": 10,
+      "advanced": true,
+      "desc": ""
+    },
+    "df_dev_min": {
+      "title": "Min Defocus Variation Per Particle (A)",
+      "section": "ctf",
+      "value": 100,
+      "hidden": false,
+      "type": "number",
+      "order": 17,
+      "advanced": false,
+      "desc": ""
+    },
+    "phase_shift": {
+      "title": "Phase Shift (rad)",
+      "section": "ctf",
+      "value": 0,
+      "hidden": false,
+      "type": "number",
+      "order": 21,
+      "advanced": false,
+      "desc": ""
+    },
+    "df_dev_max": {
+      "title": "Max Defocus Variation Per Particle (A)",
+      "section": "ctf",
+      "value": 500,
+      "hidden": false,
+      "type": "number",
+      "order": 18,
+      "advanced": false,
+      "desc": ""
+    },
+    "n_rs": {
+      "title": "Number of gridpoints for rotations",
+      "section": "sim",
+      "value": 8,
+      "hidden": false,
+      "type": "number",
+      "order": 1,
+      "advanced": false,
+      "desc": ""
+    },
+    "n_ts": {
+      "title": "Number of gridpoints for shifts",
+      "section": "sim",
+      "value": 1,
+      "hidden": true,
+      "type": "number",
+      "order": 2,
+      "advanced": false,
+      "desc": ""
+    },
+    "amp_contrast": {
+      "title": "Amplitude Contrast",
+      "section": "ctf",
+      "value": 0.07,
+      "hidden": false,
+      "type": "number",
+      "order": 12,
+      "advanced": false,
+      "desc": ""
+    },
+    "n_particles": {
+      "title": "Number of particles to generate",
+      "section": "sim",
+      "value": 1000,
+      "hidden": false,
+      "type": "number",
+      "order": 0,
+      "advanced": false,
+      "desc": ""
+    },
+    "df_ang_max": {
+      "title": "Max of Defocus Angle",
+      "section": "ctf",
+      "value": 0.2,
+      "hidden": false,
+      "type": "number",
+      "order": 20,
+      "advanced": false,
+      "desc": ""
+    },
+    "cs_mm": {
+      "title": "Spherical Aberration (mm)",
+      "section": "ctf",
+      "value": 2.7,
+      "hidden": false,
+      "type": "number",
+      "order": 13,
+      "advanced": false,
+      "desc": ""
+    },
+    "apply_ctf": {
+      "title": "Apply CTF to images",
+      "section": "ctf",
+      "value": true,
+      "hidden": false,
+      "type": "boolean",
+      "order": 11,
+      "advanced": false,
+      "desc": ""
+    },
+    "df_ang_min": {
+      "title": "Min Defocus Angle (rad)",
+      "section": "ctf",
+      "value": 1.4,
+      "hidden": false,
+      "type": "number",
+      "order": 19,
+      "advanced": false,
+      "desc": ""
+    },
+    "fulcrum_x": {
+      "title": "X coordinate of fulcrum in voxels",
+      "section": "sim",
+      "value": null,
+      "hidden": false,
+      "type": "number",
+      "order": 7,
+      "advanced": false,
+      "desc": ""
+    },
+    "fulcrum_y": {
+      "title": "Y coordinate of fulcrum in voxels",
+      "section": "sim",
+      "value": null,
+      "hidden": false,
+      "type": "number",
+      "order": 8,
+      "advanced": false,
+      "desc": ""
+    },
+    "fulcrum_z": {
+      "title": "Z coordinate of fulcrum in voxels",
+      "section": "sim",
+      "value": null,
+      "hidden": false,
+      "type": "number",
+      "order": 9,
+      "advanced": false,
+      "desc": ""
+    },
+    "accel_kv": {
+      "title": "Accelerating Voltage (kV)",
+      "section": "ctf",
+      "value": 300,
+      "hidden": false,
+      "type": "number",
+      "order": 14,
+      "advanced": false,
+      "desc": ""
+    },
+    "local_extent_t": {
+      "title": "Shift extent between two bodies",
+      "section": "sim",
+      "value": 0.1,
+      "hidden": true,
+      "type": "number",
+      "order": 5,
+      "advanced": false,
+      "desc": ""
+    },
+    "scale": {
+      "title": "Scale",
+      "section": "ctf",
+      "value": 1,
+      "hidden": false,
+      "type": "number",
+      "order": 22,
+      "advanced": false,
+      "desc": ""
+    },
+    "snr": {
+      "title": "Signal to noise ratio",
+      "section": "sim",
+      "value": 0.5,
+      "hidden": false,
+      "type": "number",
+      "order": 4,
+      "advanced": false,
+      "desc": ""
+    },
+    "e_ts": {
+      "title": "Extent for shifts",
+      "section": "sim",
+      "value": 1,
+      "hidden": true,
+      "type": "number",
+      "order": 3,
+      "advanced": false,
+      "desc": ""
+    },
+    "df_max": {
+      "title": "Maximum Defocus Value (A)",
+      "section": "ctf",
+      "value": 20000,
+      "hidden": false,
+      "type": "number",
+      "order": 16,
+      "advanced": false,
+      "desc": ""
+    }
+  },
+  "resources_allocated": {
+    "lane": "default",
+    "target": {
+      "lane": "default",
+      "name": "rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+      "cache_reserve_mb": 10000,
+      "title": "Worker node rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+      "resource_slots": {
+        "GPU": [
+          0,
+          1,
+          2
+        ],
+        "RAM": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "CPU": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "hostname": "rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+      "cache_path": "/run/media/klim/Crucial4/cryosparcScratch",
+      "cache_quota_mb": null,
+      "resource_fixed": {
+        "SSD": true
+      },
+      "desc": null,
+      "type": "node",
+      "ssh_str": "klim@rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+      "worker_bin_path": "/home/klim/software/cryosparc/cryosparc2_worker/bin/cryosparcw"
+    },
+    "license": true,
+    "hostname": "rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+    "slots": {
+      "GPU": [
+        0
+      ],
+      "RAM": [
+        1,
+        2,
+        3
+      ],
+      "CPU": [
+        8,
+        9
+      ]
+    },
+    "fixed": {
+      "SSD": true
+    },
+    "lane_type": "node"
+  },
+  "job_dir": "J194",
+  "errors_run": [],
+  "queued_to_lane": "default",
+  "run_on_master_direct": false,
+  "version": "v2.9.0",
+  "output_result_groups": [
+    {
+      "num_items": 8000,
+      "uid": "J194-G0",
+      "title": "All particles",
+      "passthrough": false,
+      "description": "All particles that were processed, including alignments",
+      "contains": [
+        {
+          "passthrough": false,
+          "type": "particle.blob",
+          "uid": "J194-R0",
+          "name": "blob",
+          "group_name": "particles"
+        },
+        {
+          "passthrough": false,
+          "type": "particle.alignments3D",
+          "uid": "J194-R1",
+          "name": "alignments3D",
+          "group_name": "particles"
+        },
+        {
+          "passthrough": false,
+          "type": "particle.ctf",
+          "uid": "J194-R2",
+          "name": "ctf",
+          "group_name": "particles"
+        }
+      ],
+      "type": "particle",
+      "name": "particles"
+    }
+  ],
+  "launched_at": "2019-09-23T19:35:24.332Z",
+  "run_as_user": null,
+  "created_by_job_uid": null,
+  "errors_build_params": {},
+  "PID_main": 76245,
+  "failed_at": null,
+  "errors_build_inputs": {},
+  "resources_needed": {
+    "slots": {
+      "GPU": 1,
+      "RAM": 3,
+      "CPU": 2
+    },
+    "fixed": {
+      "SSD": true
+    },
+    "license": true
+  },
+  "job_dir_size": 0,
+  "killed_at": null,
+  "PID_workers": [],
+  "queue_message": null,
+  "params_secs": {
+    "ctf": {
+      "desc": "",
+      "order": 1,
+      "title": "CTF Parameters"
+    },
+    "sim": {
+      "desc": "",
+      "order": 0,
+      "title": "Simulated Data"
+    }
+  },
+  "queued_at": "2019-09-23T19:35:23.930Z",
+  "description": "Enter a description.",
+  "queue_index": null,
+  "output_results": [
+    {
+      "num_items": [
+        8000
+      ],
+      "uid": "J194-R0",
+      "passthrough": false,
+      "min_fields": [
+        [
+          "path",
+          "O"
+        ],
+        [
+          "idx",
+          "u4"
+        ],
+        [
+          "shape",
+          "2u4"
+        ],
+        [
+          "psize_A",
+          "f4"
+        ],
+        [
+          "sign",
+          "f4"
+        ]
+      ],
+      "group_name": "particles",
+      "metafiles": [
+        "J194/cryosparc_P2_J194_simulated_particles.cs"
+      ],
+      "description": "",
+      "name": "blob",
+      "title": "Particle raw data",
+      "versions": [
+        "F"
+      ],
+      "type": "particle.blob"
+    },
+    {
+      "num_items": [
+        8000
+      ],
+      "uid": "J194-R1",
+      "passthrough": false,
+      "min_fields": [
+        [
+          "split",
+          "u4"
+        ],
+        [
+          "shift",
+          "2f4"
+        ],
+        [
+          "pose",
+          "3f4"
+        ],
+        [
+          "psize_A",
+          "f4"
+        ],
+        [
+          "error",
+          "f4"
+        ],
+        [
+          "error_min",
+          "f4"
+        ],
+        [
+          "resid_pow",
+          "f4"
+        ],
+        [
+          "slice_pow",
+          "f4"
+        ],
+        [
+          "image_pow",
+          "f4"
+        ],
+        [
+          "cross_cor",
+          "f4"
+        ],
+        [
+          "alpha",
+          "f4"
+        ],
+        [
+          "weight",
+          "f4"
+        ],
+        [
+          "pose_ess",
+          "f4"
+        ],
+        [
+          "shift_ess",
+          "f4"
+        ],
+        [
+          "class_posterior",
+          "f4"
+        ],
+        [
+          "class",
+          "u4"
+        ],
+        [
+          "class_ess",
+          "f4"
+        ]
+      ],
+      "group_name": "particles",
+      "metafiles": [
+        "J194/cryosparc_P2_J194_simulated_particles.cs"
+      ],
+      "description": "3D alignments including pose, shift, stats, classification scores, etc.",
+      "name": "alignments3D",
+      "title": "Refined alignments",
+      "versions": [
+        "F"
+      ],
+      "type": "particle.alignments3D"
+    },
+    {
+      "num_items": [
+        8000
+      ],
+      "uid": "J194-R2",
+      "passthrough": false,
+      "min_fields": [
+        [
+          "type",
+          "O"
+        ],
+        [
+          "exp_group_id",
+          "u4"
+        ],
+        [
+          "accel_kv",
+          "f4"
+        ],
+        [
+          "cs_mm",
+          "f4"
+        ],
+        [
+          "amp_contrast",
+          "f4"
+        ],
+        [
+          "df1_A",
+          "f4"
+        ],
+        [
+          "df2_A",
+          "f4"
+        ],
+        [
+          "df_angle_rad",
+          "f4"
+        ],
+        [
+          "phase_shift_rad",
+          "f4"
+        ],
+        [
+          "scale",
+          "f4"
+        ],
+        [
+          "scale_const",
+          "f4"
+        ]
+      ],
+      "group_name": "particles",
+      "metafiles": [
+        "J194/cryosparc_P2_J194_simulated_particles.cs"
+      ],
+      "description": "",
+      "name": "ctf",
+      "title": "CTF",
+      "versions": [
+        "F"
+      ],
+      "type": "particle.ctf"
+    }
+  ],
+  "PID_monitor": 76241,
+  "cluster_job_id": null,
+  "interactive_hostname": "rad-dhcp-169-230-99-62.RADIOLOGY.UCSF.EDU",
+  "running_at": "2019-09-23T19:35:31.479Z",
+  "interactive": false,
+  "ui_layouts": {
+    "P2": {
+      "show": true,
+      "top": 272,
+      "height": 192,
+      "width": 298,
+      "groups": [
+        {
+          "lane": 1,
+          "rightendcol": 1813,
+          "single": true,
+          "len": 1,
+          "subtree": 6,
+          "startrow": 1,
+          "start": "J194",
+          "startcol": 1813,
+          "leftendcol": 1813,
+          "conns": [
+            {
+              "origin": [
+                8463,
+                464
+              ],
+              "end": "J212",
+              "endcol": 1813,
+              "subtree": 6,
+              "startrow": 1,
+              "start": "J194",
+              "startcol": 1813,
+              "coords": [
+                [
+                  30,
+                  0
+                ],
+                [
+                  30,
+                  40
+                ],
+                [
+                  0,
+                  40
+                ],
+                [
+                  0,
+                  280
+                ]
+              ],
+              "extent": [
+                30,
+                280
+              ],
+              "coloridx": 3,
+              "endrow": 2
+            }
+          ],
+          "endrow": 2
+        }
+      ],
+      "floater": false,
+      "left": 8344
+    },
+    "P2W7": {
+      "show": true,
+      "top": 272,
+      "height": 192,
+      "width": 298,
+      "groups": [
+        {
+          "lane": 1,
+          "rightendcol": 1813,
+          "single": true,
+          "len": 1,
+          "subtree": 6,
+          "startrow": 1,
+          "start": "J194",
+          "startcol": 1813,
+          "leftendcol": 1813,
+          "conns": [
+            {
+              "origin": [
+                1439,
+                464
+              ],
+              "end": "J212",
+              "endcol": 1813,
+              "subtree": 6,
+              "startrow": 1,
+              "start": "J194",
+              "startcol": 1813,
+              "coords": [
+                [
+                  30,
+                  0
+                ],
+                [
+                  30,
+                  40
+                ],
+                [
+                  0,
+                  40
+                ],
+                [
+                  0,
+                  280
+                ]
+              ],
+              "extent": [
+                30,
+                280
+              ],
+              "coloridx": 3,
+              "endrow": 2
+            }
+          ],
+          "endrow": 2
+        }
+      ],
+      "floater": false,
+      "left": 1320
+    },
+    "P2W5": {
+      "show": false,
+      "top": 0,
+      "height": 192,
+      "width": 298,
+      "groups": [],
+      "floater": false,
+      "left": 0
+    }
+  },
+  "no_check_inputs_ready": false,
+  "job_sig": "21928838467868426837249505639732893103466039414408353478065174104359374557040114087562837552921780618067236484773106069302405245345492887405183063478436133678778505135477583100845257800804839087977834835516323735279741428803019465846472417413618370558050119985249912411409522597077084542924820190528647433557028307204558340191858376369678536470445853634437132540575195968924738197629795292298559625288043187818457999381942985466106589876226177435720060669099765237377189068277391026535269932737450504019255705027870097116922708009223323915430735314636676784505246647044428233579427505144342945799929453479679599871076"
+}
