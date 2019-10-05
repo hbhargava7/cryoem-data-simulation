@@ -9,3 +9,7 @@ output/*
 /.eman2settings.json
 /.gitignore.swp
 /test1
+
+*.c
+*.so
+build/*
