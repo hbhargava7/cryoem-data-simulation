@@ -5,6 +5,9 @@ Python3 tools for simulating cryoEM particle data.
 Built with code from https://github.com/mbrubake/cryoem-cvpr2015
 
 ### Usage
+
+Note: The `pyx` modules in `cryoem-cython-pyx` need to be compiled for your system. See below.
+
 *Simulate data*
 ```
 $ python3 simulate_particles.py <input_mrc_path> <output_directory> --n_particles n --snr s
@@ -24,6 +27,7 @@ Other Flags:
 * `plot.png`: Visualization of the first 8 particles
 
 ### To compile the pyx files (in cryoem-cython-pyx)
+Compile using `clang` or `gcc` and then either move or symlink the `.so` files into the `cryoem` directory.
 *For macOS*
 ```
 $ export C_INCLUDE_PATH=/usr/local/Cellar/python/3.7.4/Frameworks/Python.framework/Versions/3.7/Headers:/usr/local/lib/python3.7/site-packages/numpy/core/include
