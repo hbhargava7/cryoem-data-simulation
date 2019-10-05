@@ -29,10 +29,12 @@ from matplotlib.colors import LogNorm
 # For parallel https://stackoverflow.com/questions/15639779/why-does-multiprocessing-use-only-a-single-core-after-i-import-numpy
 os.environ["OPENBLAS_MAIN_FREE"] = "1"
 import resource
-resource.setrlimit(resource.RLIMIT_NOFILE, (20000, 20000))
+resource.setrlimit(resource.RLIMIT_NOFILE, (10000, 10000))
 # matplotlib configuration
 mpl.rcParams['figure.dpi'] = 100
 plt.style.use(['dark_background'])
+
+results = []
 
 def main(args):
 	# setup microscope and ctf parameters
@@ -65,6 +67,7 @@ def main(args):
 
 	# Read the volume data and compute fft
 	vol,hdr = mrc.readMRC(args.input, inc_header=True)
+	# vol,hdr = mrc.readMRC("test_data/6ac9TeMet_denmod.mrc", inc_header=True)
 
 	params['boxSize'] = int(vol.shape[0])
 	params['pxSize'] = (hdr['xlen']/hdr['nx'])
@@ -88,33 +91,32 @@ def main(args):
 	
 	tic = time.time()
 
-	# PROCESS IMPLEMENTATION
-	manager = mp.Manager()
-	output = manager.list()
+	# POOL IMPLEMENTATION
+	pool = mp.Pool(mp.cpu_count())
 
-	jobs = []
-	concurrency = mp.cpu_count()
-	sema = mp.Semaphore(concurrency)
-
+	# results = [simulateParticle(params, V, TtoF,i) for i in range(params['n_particles'])]
 	for i in range(params['n_particles']):
-		sema.acquire()
-		p = mp.Process(target=simulateParticle, args=(output, params, V, TtoF, i, tic, sema))
-		jobs.append(p)
-		p.start()
+		pool.apply_async(simulateParticle, args=(params, V, TtoF, i, tic), callback = collect_result)
 
-	for proc in jobs:
-		proc.join()
+	pool.close()
+	pool.join()
+
+	
+
+
+
 
 	print("\nDone simulating in: %s" % format_timedelta(time.time() - tic))
-
-	results = output
+	global results
+	# print(results)
+	# results = output
 	results = sorted(results, key=lambda x: x[0])
 
 	particles = [result[1] for result in results]
 	starfile = [result[2] for result in results]
 
 	print('\nWriting out data...')
-	# Plot the first 8 images
+	# Plot the first 8 iparams['mag']es
 	fig = plt.figure(figsize=(12, 5))
 	col = 4
 	row = 2
@@ -136,7 +138,11 @@ def main(args):
 	f.close()
 	print('Done!')
 
-def simulateParticle(output,params, V, TtoF,i,tic, sema):
+def collect_result(result):
+    global results
+    results.append(result)
+
+def simulateParticle(output,params, V, TtoF,i,tic):
 	ellapse_time = time.time() - tic
 	remain_time = float(params['n_particles'] - i)*ellapse_time/max(i,1)
 	print("\r%.2f Percent Complete (%d particles done)... (Elapsed: %s, Remaining: %s)" % (i/float(params['n_particles'])*100.0,i,format_timedelta(ellapse_time),format_timedelta(remain_time)), end="")
@@ -200,11 +206,8 @@ def simulateParticle(output,params, V, TtoF,i,tic, sema):
 					 str(0),
 					 str(params['spherical_abberr']),
 					 str(params['accel_kv'])]
-	# global results
-	output.append( (i, particle, starfile_line))
-	sema.release()
-
-	# return i, particle, starfile_line
+					 
+	return i, particle, starfile_line
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()

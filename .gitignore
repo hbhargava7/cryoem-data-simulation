@@ -8,3 +8,4 @@ output/*
 /.browsercache.json
 /.eman2settings.json
 /.gitignore.swp
+/test1
