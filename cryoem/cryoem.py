@@ -3,7 +3,6 @@ from geom import gencoords
 import scipy.ndimage.interpolation as spinterp
 import scipy.ndimage.filters as spfilter
 
-import pyximport; pyximport.install(setup_args={"include_dirs":n.get_include()},reload_support=True)
 import sparsemul
 
 def compute_density_moments(M,mu=None):
