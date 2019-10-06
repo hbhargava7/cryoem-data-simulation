@@ -1,28 +1,25 @@
 import sys
 import os
 import time
-import numpy as n
 import argparse
 import math
 import resource
-
 import multiprocessing as mp
+
+import numpy as n
+import numpy.fft as fourier
 
 sys.path.append('cryoem/')
 sys.path.append('cryoem/util')
 
 from cryoem.cryoio import ctf
 from cryoem.cryoio import mrc
-
 from cryoem.util import format_timedelta
-
 from cryoem import cryoem
 from cryoem import geom
 from cryoem import cryoops
 from cryoem import density
 from cryoem import sincint
-
-import numpy.fft as fourier
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -48,9 +45,9 @@ def main(args):
 	params['accel_kv'] = 300
 	params['amp_contrast'] = 0.07
 	params['phase_shift'] = 0
-	scale = 1
 	params['spherical_abberr'] = 2.7
 	params['mag'] = 10000.0
+	scale = 1
 
 	# particle parameters
 	params['n_particles'] = args.n_particles
@@ -163,7 +160,7 @@ def main(args):
 	f.close()
 	print('Done!')
 
-def simulateParticle(output,params, V, TtoF,i,tic, sema):
+def simulateParticle(output,params, V, TtoF, i, tic, sema):
 	ellapse_time = time.time() - tic
 	remain_time = float(params['n_particles'] - i)*ellapse_time/max(i,1)
 	print("\r%.2f Percent Complete (%d particles done)... (Elapsed: %s, Remaining: %s)" % (i/float(params['n_particles'])*100.0,i,format_timedelta(ellapse_time),format_timedelta(remain_time)), end="")
@@ -231,10 +228,8 @@ def simulateParticle(output,params, V, TtoF,i,tic, sema):
 					 str(params['spherical_abberr']),
 					 str(params['accel_kv'])]
 
-	output.append( (i, particle, starfile_line))
+	output.append((i, particle, starfile_line))
 	sema.release()
-
-	# return i, particle, starfile_line
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
@@ -244,6 +239,5 @@ if __name__ == "__main__":
 	parser.add_argument("--sigma_noise", help="noise stdev", type=float)
 	parser.add_argument("--snr", help="signal to noise ratio", type=float)
 	parser.add_argument("--cpus", help="number of processors to use", type=int)
-
 
 	sys.exit(main(parser.parse_args()))
