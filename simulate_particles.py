@@ -78,7 +78,12 @@ def main(args):
 
 	V = density.real_to_fspace(premult.reshape((1,1,-1)) * premult.reshape((1,-1,1)) * premult.reshape((-1,1,1)) * vol)
 
-	params['sigma_noise'] = vol.mean()/params['snr']
+	# Compute the mean of the signal, excluding zeros
+	data = vol
+	data[data == 0] = n.nan
+	signal_mean = n.nanmean(data)
+	params['signal_mean'] = signal_mean
+	params['sigma_noise'] = signal_mean/params['snr']
 
 	if args.sigma_noise is not None:
 		params['sigma_noise'] = args.sigma_noise
