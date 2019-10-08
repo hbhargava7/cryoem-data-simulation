@@ -141,7 +141,7 @@ def main(args):
 		with open(chunkFileName, 'wb') as filehandle:
 			pickle.dump(output, filehandle)
 
-		print("\nDone simulating stack %d of size %d in time %s." % (i, chunkSize, format_timedelta(time.time() - ticc)))
+		print("\nDone simulating chunk %d of size %d in time %s." % (i+1, chunkSize, format_timedelta(time.time() - ticc)))
 
 	# Join the chunks together
 	results = []
@@ -208,7 +208,7 @@ def main(args):
 def simulateParticle(output,params, V, TtoF, i, tic, sema):
 	ellapse_time = time.time() - tic
 	remain_time = float(params['n_particles'] - i)*ellapse_time/max(i,1)
-	print("\r%.2f Percent Complete (%d particles done)... (Elapsed: %s, Remaining: %s)" % (i/float(params['n_particles'])*100.0,i,format_timedelta(ellapse_time),format_timedelta(remain_time)), end="")
+	print("\r%.2f Percent Complete (%d particles done)... (Elapsed: %s, Remaining: %s)" % (i/float(params['n_particles'])*100.0,i+1,format_timedelta(ellapse_time),format_timedelta(remain_time)), end="")
 		
 	# Numpy random seed
 	n.random.seed(int.from_bytes(os.urandom(4), byteorder='little')) 
