@@ -145,7 +145,7 @@ def main(args):
 		print("\nSimulating %d particles on %d processors." % (params['n_particles'], concurrency))
 
 		for j in range(chunkSize):
-			idx = i * chunkSize + j
+			idx = i * 1000 + j
 			sema.acquire()
 			p = mp.Process(target=simulateParticle, args=(output, params, V, TtoF, idx, tic, sema))
 			jobs.append(p)
@@ -172,8 +172,9 @@ def main(args):
 
 	# Delete the temp directory
 	shutil.rmtree(tempPath)
-
 	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
+	print("\nRate of simulation: %.2f particles per second." % (int(params['n_particles'])/float(time.time() - tic)))
+	simulation_rate = int(params['n_particles'])/float(time.time() - tic)
 
 	results = sorted(results, key=lambda x: x[0])
 
@@ -208,7 +209,8 @@ def main(args):
 	f.write("Thank you for using this data simulator.\n")
 	f.write("https://github.com/hbhargava7/cryoem-data-simulation\n\n")
 	f.write("Simulated %d particles in %s.\n" % (params['n_particles'], format_timedelta(time.time() - tic)))
-	f.write("Input volume: %s.\n" % args.input)
+	f.write("Rate of simulation was %.2f particles per second." % simulation_rate)
+	f.write("\n\nInput volume: %s.\n" % args.input)
 	f.write("Output path: %s.\n\n" % args.output_path)
 
 	if args.sigma_noise is not None:
