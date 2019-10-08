@@ -337,6 +337,6 @@ if __name__ == "__main__":
 	parser.add_argument("--sigma_noise", help="noise stdev", type=float)
 	parser.add_argument("--snr", help="signal to noise ratio", type=float)
 	parser.add_argument("--cpus", help="number of processors to use", type=int)
-	parser.add_argument("--overwrite", help="overwrite the target directory if necessary?", type=bool)
+	parser.add_argument("--overwrite", help="overwrite the target directory if necessary?", action='store_true')
 
 	sys.exit(main(parser.parse_args()))
