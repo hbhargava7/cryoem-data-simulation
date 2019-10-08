@@ -148,7 +148,8 @@ def main(args):
 	chunkFiles = [f for f in os.listdir(tempPath) if os.path.isfile(os.path.join(tempPath, f))]
 
 	for f in chunkFiles:
-		with open(tempPath+f, 'rb') as filehandle:
+		with open(os.path.join(tempPath, f), 'rb') as filehandle:
+			print("HANDLE: " + filehandle)
 			chunk = pickle.load(filehandle)
 			results.extend(chunk)
 
