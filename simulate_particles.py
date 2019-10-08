@@ -74,7 +74,7 @@ def main(args):
 
 	V = density.real_to_fspace(premult.reshape((1,1,-1)) * premult.reshape((1,-1,1)) * premult.reshape((-1,1,1)) * vol)
 
-	params['sigma_noise'] = vol.std()/params['snr']
+	params['sigma_noise'] = vol.mean()/params['snr']
 
 	if args.sigma_noise is not None:
 		params['sigma_noise'] = args.sigma_noise
