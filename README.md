@@ -24,6 +24,7 @@ Other Flags:
 *Outputs (in output_directory)*
 * `simulated_particles.mrcs`: mrcs particle stack containing the particle image data
 * `simulated_particles.star`: Relion star file describing the simulated particles
+* `simulation_metadata.txt`: Log of the simulation parameters and performance
 * `plot.png`: Visualization of the first 8 particles
 
 ![plot example](reference/plot.png)
