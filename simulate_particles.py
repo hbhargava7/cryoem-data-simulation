@@ -40,6 +40,23 @@ mpl.rcParams['figure.dpi'] = 100
 plt.style.use(['dark_background'])
 
 def main(args):
+	# Create the output directory
+	if not os.path.exists(args.output_path):
+		os.mkdir(args.output_path)
+	else:
+		proceed = False
+		if args.overwrite:
+			proceed = True
+		else:
+			proceed = query_yes_no('Output path exists. Overwrite?')
+	
+		if proceed:
+			shutil.rmtree(args.output_path)
+			os.mkdir(args.output_path)
+		else:
+			print('Cancelled.')
+			return
+
 	# setup microscope and ctf parameters
 	params = {}
 	params['defocus_min'] = 10000
@@ -139,19 +156,19 @@ def main(args):
 
 		chunkFileName = tempPath + ('%d_chunk.tmp' % i)
 		with open(chunkFileName, 'wb') as filehandle:
-			pickle.dump(output, filehandle)
+			pickle.dump(list(output), filehandle)
+			filehandle.close()
 
 		print("\nDone simulating chunk %d of size %d in time %s." % (i+1, chunkSize, format_timedelta(time.time() - ticc)))
 
 	# Join the chunks together
 	results = []
 	chunkFiles = [f for f in os.listdir(tempPath) if os.path.isfile(os.path.join(tempPath, f))]
-
+	tempPath = os.path.abspath(tempPath)
 	for f in chunkFiles:
-		with open(os.path.join(tempPath, f), 'rb') as filehandle:
-			print("HANDLE: " + filehandle)
-			chunk = pickle.load(filehandle)
-			results.extend(chunk)
+		file = open(os.path.join(tempPath, f), 'rb')
+		chunk = pickle.load(file)
+		results.extend(chunk)
 
 	# Delete the temp directory
 	shutil.rmtree(tempPath)
@@ -205,6 +222,39 @@ def main(args):
 	f.close()
 
 	print('Done!')
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
 
 def simulateParticle(output,params, V, TtoF, i, tic, sema):
 	ellapse_time = time.time() - tic
@@ -285,5 +335,6 @@ if __name__ == "__main__":
 	parser.add_argument("--sigma_noise", help="noise stdev", type=float)
 	parser.add_argument("--snr", help="signal to noise ratio", type=float)
 	parser.add_argument("--cpus", help="number of processors to use", type=int)
+	parser.add_argument("--overwrite", help="overwrite the target directory if necessary?", type=bool)
 
 	sys.exit(main(parser.parse_args()))
