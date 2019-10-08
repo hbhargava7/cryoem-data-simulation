@@ -13,3 +13,4 @@ output/*
 *.c
 *.so
 build/*
+/alignment_data
