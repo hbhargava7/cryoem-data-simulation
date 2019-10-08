@@ -1,10 +1,13 @@
 import sys
 import os
+import glob
 import time
 import argparse
 import math
 import resource
 import multiprocessing as mp
+
+import pickle
 
 import numpy as n
 import numpy.fft as fourier
@@ -89,10 +92,13 @@ def main(args):
 	
 	tic = time.time()
 
-	results = []
-
 	nChunks = math.ceil(params['n_particles'] / 1000)
 	lastChunkSize = params['n_particles'] - ((nChunks - 1)*1000)
+
+	# Make a directory to cache data on the disk.
+	tempPath = args.output_path + 'tmp/'
+	if not os.path.exists(tempPath):
+		os.mkdir(tempPath)
 
 	for i in range(nChunks):
 		ticc = time.time()
@@ -125,9 +131,20 @@ def main(args):
 		for proc in jobs:
 			proc.join()
 
-		results.extend(output)
+		chunkFileName = tempPath + ('%d_chunk.tmp' % i)
+		with open(chunkFileName, 'wb') as filehandle:
+			pickle.dump(output, filehandle)
 
 		print("\nDone simulating stack %d of size %d in time %s." % (i, chunkSize, format_timedelta(time.time() - ticc)))
+
+	# Join the chunks together
+	results = []
+	chunkFiles = [f for f in os.listdir(tempPath) if os.path.isfile(os.path.join(tempPath, f))]
+
+	for f in chunkFiles:
+		with open(tempPath+f, 'rb') as filehandle:
+			chunk = pickle.load(filehandle)
+			results.extend(chunk)
 
 	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
 
@@ -143,9 +160,9 @@ def main(args):
 	col = 4
 	row = 2
 	for i in range(1, col*row +1):
-	    img = particles[i]
-	    fig.add_subplot(row, col, i)
-	    plt.imshow(img, cmap='gray')
+		img = particles[i]
+		fig.add_subplot(row, col, i)
+		plt.imshow(img, cmap='gray')
 	plt.savefig(args.output_path + 'plot.png')
 
 	mrc.writeMRC(args.output_path + 'simulated_particles.mrcs', n.transpose(particles,(1,2,0)), params['pxSize'])
@@ -156,8 +173,27 @@ def main(args):
 	f.write("\ndata_images\n\nloop_\n_rlnAmplitudeContrast #1 \n_rlnAnglePsi #2 \n_rlnAngleRot #3 \n_rlnAngleTilt #4 \n_rlnClassNumber #5 \n_rlnDefocusAngle #6 \n_rlnDefocusU #7 \n_rlnDefocusV #8 \n_rlnDetectorPixelSize #9 \n_rlnImageName #10 \n_rlnMagnification #11 \n_rlnOriginX #12 \n_rlnOriginY #13 \n_rlnPhaseShift #14 \n_rlnSphericalAberration #15\n_rlnVoltage #16\n\n")
 	# Write the particle information
 	for l in starfile:
-	    f.write(' '.join(l) + '\n')
+		f.write(' '.join(l) + '\n')
 	f.close()
+
+	# Write the logfile
+	f = open((args.output_path + 'simulation_metadata.txt'), 'w')
+	f.write("Thank you for using this data simulator.\n")
+	f.write("https://github.com/hbhargava7/cryoem-data-simulation\n\n")
+	f.write("Simulated %d particles in %s.\n" % (params['n_particles'], format_timedelta(time.time() - tic)))
+	f.write("Input volume: %s.\n" % args.input)
+	f.write("Output path: %s.\n\n" % args.output_path)
+
+	if args.sigma_noise is not None:
+		f.write("Used user-specified noise sigma: " + str(params['sigma_noise']))
+	else:
+		f.write("Used snr-based noise sigma: " + str(params['sigma_noise']))
+
+	params_string = "{" + "\n".join("{!r}: {!r},".format(k, v) for k, v in params.items()) + "}"
+	f.write("\n\n\nParameters Dump: \n" + str(params_string))
+
+	f.close()
+
 	print('Done!')
 
 def simulateParticle(output,params, V, TtoF, i, tic, sema):
