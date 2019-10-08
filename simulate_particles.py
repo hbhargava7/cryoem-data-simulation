@@ -6,6 +6,7 @@ import argparse
 import math
 import resource
 import multiprocessing as mp
+import shutil
 
 import pickle
 
@@ -145,6 +146,9 @@ def main(args):
 		with open(tempPath+f, 'rb') as filehandle:
 			chunk = pickle.load(filehandle)
 			results.extend(chunk)
+
+	# Delete the temp directory
+	shutil.rmtree(tempPath)
 
 	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
 
