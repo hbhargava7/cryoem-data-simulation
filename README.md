@@ -16,6 +16,7 @@ Other Flags:
 * `--snr`: Specify a signal to noise ratio for the particles
 * `--sigma_noise`: Specify a numeric standard deviation for the noise to be added (will override `--snr`)
 * `--cpus`: Specify the number of processors to use (otherwise will use (n_cpus_available - 1)
+* `--overwrite`: Don't prompt user for confirmation if the output directory exists and will be overwritten
 * The microscope and CTF parameters can be changed in the `params` dict in main().
 
 *Inputs*
