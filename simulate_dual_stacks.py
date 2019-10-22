@@ -126,6 +126,10 @@ def main(args):
 	if not os.path.exists(temet_tempPath):
 		os.mkdir(temet_tempPath)
 
+	concurrency = mp.cpu_count() - 1
+
+	if args.cpus is not None:
+		concurrency = args.cpus
 	print("Simulating %d particles per volume on %d processors." % (params['n_particles'], concurrency))
 
 	for i in range(nChunks):
@@ -141,13 +145,8 @@ def main(args):
 		output_temet = manager.list()
 
 		jobs = []
-		concurrency = mp.cpu_count() - 1
-
-		if args.cpus is not None:
-			concurrency = args.cpus
 
 		sema = mp.Semaphore(concurrency)
-
 
 		for j in range(chunkSize):
 			idx = i * 1000 + j
@@ -157,8 +156,8 @@ def main(args):
 			p.start()
 
 		for proc in jobs:
-			proc.terminate()
 			proc.join()
+			proc.terminate()
 
 		wt_chunkFileName = wt_tempPath + ('%d_chunk.tmp' % i)
 		temet_chunkFileName = temet_tempPath + ('%d_chunk.tmp' % i)
@@ -173,7 +172,7 @@ def main(args):
 
 		# print("\nDone simulating chunk %d of size %d in time %s." % (i+1, chunkSize, format_timedelta(time.time() - ticc)))
 
-	print("Done simulating all particles in: %s" % format_timedelta(time.time() - tic))
+	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
 	print("Rate of simulation: %.2f particles PAIRS per second." % (int(params['n_particles'])/float(time.time() - tic)))
 
 	simulation_rate = int(params['n_particles'])/float(time.time() - tic)
