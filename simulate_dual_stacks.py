@@ -103,13 +103,6 @@ def main(args):
 	params['wt_snr'] = params['wt_signal_mean']/params['sigma_noise']
 	params['temet_snr'] = params['temet_signal_mean']/params['sigma_noise']
 
-	# Set up the particles datastructures
-	wt_particles = n.empty((params['n_particles'], params['boxSize'], params['boxSize']), dtype=density.real_t)
-	wt_starfile = []
-	
-	temet_particles = n.empty((params['n_particles'], params['boxSize'], params['boxSize']), dtype=density.real_t)
-	temet_starfile = []
-
 	TtoF = sincint.gentrunctofull(N=params['boxSize'], rad=params['rad'])
 	
 	tic = time.time()
@@ -201,9 +194,8 @@ def main(args):
 		plt.imshow(img, cmap='gray')
 	plt.savefig(args.output_path + 'temet_plot.png')
 
-
-	mrc.writeMRC(args.output_path + 'wt_simulated_particles.mrcs', n.transpose(wt_particles,(1,2,0)), params['pxSize'])
-	mrc.writeMRC(args.output_path + 'temet_simulated_particles.mrcs', n.transpose(temet_particles,(1,2,0)), params['pxSize'])
+	mrc.writeMRC(args.output_path + 'wt_simulated_particles.mrcs', n.transpose(particles_wt,(1,2,0)), params['pxSize'])
+	mrc.writeMRC(args.output_path + 'temet_simulated_particles.mrcs', n.transpose(particles_temet,(1,2,0)), params['pxSize'])
 
 	# Write the starfile
 	f = open((args.output_path + str(params['sigma_noise']) + '_wt_simulated_particles.star'), 'w')
@@ -305,7 +297,7 @@ def query_yes_no(question, default="yes"):
                              "(or 'y' or 'n').\n")
 
 
-def simulateParticles(output_wt, output_temet,params, V_wt, V_temet, TtoF, i, tic, sema):
+def simulateParticles(output_wt, output_temet, params, V_wt, V_temet, TtoF, i, tic, sema):
 	ellapse_time = time.time() - tic
 	remain_time = float(params['n_particles'] - i)*ellapse_time/max(i,1)
 	print("\r%.2f Percent Complete (%d particle pairs done)... (Elapsed: %s, Remaining: %s)" % ((i+1)/float(params['n_particles'])*100.0,i+1,format_timedelta(ellapse_time),format_timedelta(remain_time)), end="")
