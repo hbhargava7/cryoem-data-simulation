@@ -152,6 +152,7 @@ def main(args):
 			p.start()
 
 		for proc in jobs:
+			proc.terminate()
 			proc.join()
 
 		chunkFileName = tempPath + ('%d_chunk.tmp' % i)
