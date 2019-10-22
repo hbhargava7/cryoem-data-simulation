@@ -98,7 +98,7 @@ def main(args):
 
 	params['sigma_noise'] = args.sigma_noise
 
-	print('Noise Sigma: ' + str(params['sigma_noise']))
+	print('Using specified sigma_noise: ' + str(params['sigma_noise']))
 
 	params['wt_snr'] = params['wt_signal_mean']/params['sigma_noise']
 	params['temet_snr'] = params['temet_signal_mean']/params['sigma_noise']
@@ -146,7 +146,7 @@ def main(args):
 
 		sema = mp.Semaphore(concurrency)
 
-		print("\nSimulating %d particles FOR EACH VOLUME on %d processors." % (params['n_particles'], concurrency))
+		print("Simulating %d particles FOR EACH VOLUME on %d processors." % (params['n_particles'], concurrency))
 
 		for j in range(chunkSize):
 			idx = i * 1000 + j
@@ -172,12 +172,12 @@ def main(args):
 
 		# print("\nDone simulating chunk %d of size %d in time %s." % (i+1, chunkSize, format_timedelta(time.time() - ticc)))
 
-	print("\nDone simulating all particles in: %s" % format_timedelta(time.time() - tic))
-	print("\nRate of simulation: %.2f particles PAIRS per second." % (int(params['n_particles'])/float(time.time() - tic)))
+	print("Done simulating all particles in: %s" % format_timedelta(time.time() - tic))
+	print("Rate of simulation: %.2f particles PAIRS per second." % (int(params['n_particles'])/float(time.time() - tic)))
 
 	simulation_rate = int(params['n_particles'])/float(time.time() - tic)
 
-	print('\nWriting out data...')
+	print('Writing out data...')
 
 	particles_wt, starfile_wt = processResultsFromChunkPath(wt_tempPath)
 	particles_temet, starfile_temet = processResultsFromChunkPath(temet_tempPath)
@@ -206,7 +206,7 @@ def main(args):
 	mrc.writeMRC(args.output_path + 'temet_simulated_particles.mrcs', n.transpose(temet_particles,(1,2,0)), params['pxSize'])
 
 	# Write the starfile
-	f = open((args.output_path + 'wt_simulated_particles.star'), 'w')
+	f = open((args.output_path + str(params['sigma_noise']) + '_wt_simulated_particles.star'), 'w')
 	# Write the header
 	f.write("\ndata_images\n\nloop_\n_rlnAmplitudeContrast #1 \n_rlnAnglePsi #2 \n_rlnAngleRot #3 \n_rlnAngleTilt #4 \n_rlnClassNumber #5 \n_rlnDefocusAngle #6 \n_rlnDefocusU #7 \n_rlnDefocusV #8 \n_rlnDetectorPixelSize #9 \n_rlnImageName #10 \n_rlnMagnification #11 \n_rlnOriginX #12 \n_rlnOriginY #13 \n_rlnPhaseShift #14 \n_rlnSphericalAberration #15\n_rlnVoltage #16\n\n")
 	# Write the particle information
@@ -215,7 +215,7 @@ def main(args):
 	f.close()
 
 	# Write the starfile
-	f = open((args.output_path + 'temet_simulated_particles.star'), 'w')
+	f = open((args.output_path + str(params['sigma_noise']) + '_temet_simulated_particles.star'), 'w')
 	# Write the header
 	f.write("\ndata_images\n\nloop_\n_rlnAmplitudeContrast #1 \n_rlnAnglePsi #2 \n_rlnAngleRot #3 \n_rlnAngleTilt #4 \n_rlnClassNumber #5 \n_rlnDefocusAngle #6 \n_rlnDefocusU #7 \n_rlnDefocusV #8 \n_rlnDetectorPixelSize #9 \n_rlnImageName #10 \n_rlnMagnification #11 \n_rlnOriginX #12 \n_rlnOriginY #13 \n_rlnPhaseShift #14 \n_rlnSphericalAberration #15\n_rlnVoltage #16\n\n")
 	# Write the particle information
@@ -377,7 +377,7 @@ def simulateParticles(output_wt, output_temet,params, V_wt, V_temet, TtoF, i, ti
 					 str(p['defocus_a']),
 					 str(p['defocus_b']),
 					 str(params['pxSize']),
-					 "%d@/wt_simulated_particles.mrcs" % (i+1),
+					 "%d@/%s_wt_simulated_particles.mrcs" % (i+1, str(params['sigma_noise'])),
 					 str(params['mag']),
 					 str(0),
 					 str(0),
@@ -394,7 +394,7 @@ def simulateParticles(output_wt, output_temet,params, V_wt, V_temet, TtoF, i, ti
 				 str(p['defocus_a']),
 				 str(p['defocus_b']),
 				 str(params['pxSize']),
-				 "%d@/temet_simulated_particles.mrcs" % (i+1),
+				 "%d@/%s_temet_simulated_particles.mrcs" % (i+1,str(params['sigma_noise'])),
 				 str(params['mag']),
 				 str(0),
 				 str(0),
