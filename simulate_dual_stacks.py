@@ -126,6 +126,8 @@ def main(args):
 	if not os.path.exists(temet_tempPath):
 		os.mkdir(temet_tempPath)
 
+	print("Simulating %d particles per volume on %d processors." % (params['n_particles'], concurrency))
+
 	for i in range(nChunks):
 		ticc = time.time()
 		if i == nChunks - 1:
@@ -146,7 +148,6 @@ def main(args):
 
 		sema = mp.Semaphore(concurrency)
 
-		print("Simulating %d particles FOR EACH VOLUME on %d processors." % (params['n_particles'], concurrency))
 
 		for j in range(chunkSize):
 			idx = i * 1000 + j
