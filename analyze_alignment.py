@@ -27,6 +27,9 @@ def main(args):
 	print('reading experimental data...')
 	temet_experimental = read_experimental(path+'temet_' + which + '.par')
 	wt_experimental = read_experimental(path+'wt_' + which + '.par')
+
+
+
 	assert len(temet_experimental) == len(wt_experimental), 'experimental parfiles have inconsistent lengths'
 
 	assert len(temet_experimental) == len(temet_theoretical), 'experimental and theoretical particle files have inconsistent lengths'
@@ -126,15 +129,57 @@ def quat2euler(q):
 	return alpha, beta, gamma
 
 # Angular distance between two quaternions
+
+def quatInverse(q):
+	d = q[0]**2 + q[1]**2 + q[2]**2 + q[3]**2
+	d = 1
+	return [q[0]/d, -q[1]/d, -q[2]/d, -q[3]/d]
+
+def quatConj(q):
+	return [q[0],-q[1],-q[2],-q[3]]
+
 def quatDist(a,b):
 	# Check to verify that quaternions are unit lengths
 	assert abs(math.sqrt(a[0]**2+a[1]**2+a[2]**2+a[3]**2)-1)<.001,"a is not a unit quaternion"
 	assert abs(math.sqrt(b[0]**2+b[1]**2+b[2]**2+b[3]**2)-1)<.001,"b is not a unit quaternion"
-	
-	# Compute distance
+
+	# # # Compute distance
 	s = a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]
+	s = round(s,4)
+
 	s = 2*(s**2)-1
-	return np.arccos(s)*180/np.pi
+	other = (np.arccos(s))*180/np.pi
+	return other
+
+	# z = a*quatConj(b)
+	# theta = 2*np.arccos(z[0])
+	# o = abs(theta*180/np.pi - 180)
+	# print("Method2: %f"%o)
+	# return abs(theta*180/np.pi - 180)
+
+
+
+	# a = quatInverse(a)
+
+	# s = [a[0]*b[0] , a[1]*b[1] , a[2]*b[2] , a[3]*b[3]]
+
+	# l = math.sqrt(s[0]**2+s[1]**2+s[2]**2+s[3]**2)
+
+	# o = 2*math.atan2(l,s[3])
+
+	# return (o*180/np.pi)
+
+	# # print("s = %f" % s)
+	# # assert s <= 1, "product greater than 1"
+	# # assert s >= -1, "product less than -1"
+
+	# try:
+	# 	output = 2*np.arccos(s)*180/np.pi
+	# 	return output
+	# except:
+	# 	e = sys.exc_info()[0]
+	# 	print("Quat Distance Error: %s" % e)
+	# 	return 50
 
 # Given two ordered lists of quaternions, compute distances between each angle
 def computeAngleErrors(A, B):
