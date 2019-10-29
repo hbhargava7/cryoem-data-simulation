@@ -5,6 +5,7 @@ volumes=("/run/media/klim/Crucial3/HKB_Vrk1_Synthetic_Maps/6ac9_denmod_bigbox.mr
 
 snrs=(200 100 50 5)
 
+# Iterate through the volumes and noise levels and simulate stacks.
 for i in "${!volnames[@]}"
 do
 	for j in "${!snrs[@]}"
