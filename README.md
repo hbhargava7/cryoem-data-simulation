@@ -8,6 +8,7 @@ Built with code from https://github.com/mbrubake/cryoem-cvpr2015
 **Data Simulation**
 * `simulate_particles.py`: Core script for parallel simulation of cryoEM particle stacks.
 * `simulate_dual_stacks.py`: Simulate two stacks from two different volumes (e.g. to compare reconstructions)
+
 **Alignment Analysis**
 * `analyze_alignment.py`: Given experimental alignment parameters (e.g. cisTEM .par file) and theoretical parameters (e.g. from `simulate_dual_stacks.py`) from two different reconstructions, compare the distributions of angular and positional  errors.
 
