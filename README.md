@@ -20,7 +20,7 @@ Built with help from https://github.com/mbrubake/cryoem-cvpr2015 and https://git
 * `perturb_alignment.py`: Given a star file with some Euler angles, perturb these orientations by a characteristic overall angular error.
 
 
-### Usage
+### Simulating Data
 
 Note: The `pyx` modules in `cryoem-cython-pyx` need to be compiled for your system. See below.
 
