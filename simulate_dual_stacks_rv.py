@@ -75,7 +75,6 @@ def main(args):
 		print("Validating parameters for multi-volume simulation.")
 		assert len(args.input_wt_volumes) == len(args.input_temet_volumes), "You must specify the same number of wt and temet input volumes."
 		assert len(args.volume_weights) == 0 or len(args.volume_weights) == len(args.input_wt_volumes), "You must specify as many weights as volume pairs."
-		assert sum(args.volume_weights) == 1, "The volume weights must add to 1."
 		print("Conducting multi-volume simulation.")
 		multiVolume = True
 	
@@ -85,12 +84,19 @@ def main(args):
 
 	if multiVolume:
 		volumePairs = []
-		volumeWeights = args.volume_weights
+		volumeWeights = None
+		if len(args.volume_weights) == 0:
+			volumeWeights = [1/len(args.input_wt_volumes) for i in range(len(args.input_wt_volumes))]
+		else:
+			volumeWeights = args.volume_weights
+			volumeWeights = [x/sum(volumeWeights) for x in volumeWeights]
+
+		print("Using volume weights: " + str(volumeWeights))
+		print('Volume metadata will be read from the first WT volume.')
 		for i, value in enumerate(zip(args.input_wt_volumes, args.input_temet_volumes)):
-			print('Volume metadata will be read from the first WT volume.')
 
 			v1, boxSize, pxSize = readVolume(value[0])
-			v2 = readVolume(value[1])
+			v2, b, s = readVolume(value[1])
 
 			if i == 0:
 				# Set the global meta variables
@@ -170,11 +176,11 @@ def main(args):
 			volIndex = 0
 			if multiVolume:
 				# If a multi-volume simulation, figure out which volume to send!!
-				pair = n.random.choice(volumePairs, p=volumeWeights)
+				indices = [i for i,x in enumerate(volumePairs)]
+				volIndex = n.random.choice(indices, p=volumeWeights)
+				pair = volumePairs[volIndex]
 				V_wt = pair[0]
 				V_temet = pair[1]
-				volIndex = volumePairs.index(pair)
-
 			# Call the function (first two args are the lists in which outputs should be placed.)
 			p = mp.Process(target=simulateParticle, args=(output_wt, output_temet, params, V_wt, V_temet, volIndex, TtoF, idx, tic, sema))
 			jobs.append(p)
@@ -271,7 +277,7 @@ def main(args):
 def readVolume(path):
 	vol, hdr = mrc.readMRC(path, inc_header=True)
 	boxSize = int(vol.shape[0])
-	pxSize = hdr_wt['xlen']/hdr_wt['nx']
+	pxSize = hdr['xlen']/hdr['nx']
 
 	premult = cryoops.compute_premultiplier(boxSize, 'lanczos', int(6)) 
 
@@ -442,8 +448,8 @@ def simulateParticle(output_wt, output_temet, params, V_wt, V_temet,  volIndex, 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--input_wt", help="input wild-type 3d volume", type=str, required=True)
-	parser.add_argument("--input_temet", help="input telluromethionine-type 3d volume", type=str, required=True)
+	parser.add_argument("--input_wt", help="input wild-type 3d volume", type=str)
+	parser.add_argument("--input_temet", help="input telluromethionine-type 3d volume", type=str)
 	parser.add_argument("--output_path", help="output path",type=str, required=True)
 	parser.add_argument("--n_particles", help="number of particles to simulate", type=int, required=True)
 	parser.add_argument("--sigma_noise", help="noise stdev", type=float, required=True)
@@ -452,6 +458,6 @@ if __name__ == "__main__":
 
 	parser.add_argument("--input_wt_volumes", help="input wt volumes from which to select", nargs='+', type=str, default=[])
 	parser.add_argument("--input_temet_volumes", help="input temet volumes from which to select", nargs='+', type=str, default=[])
-	parser.add_argument("--volume_weights", help="input temet volumes from which to select", nargs='+', type=str, default=[])
+	parser.add_argument("--volume_weights", help="input temet volumes from which to select", nargs='+', type=float, default=[])
 
 	sys.exit(main(parser.parse_args()))
