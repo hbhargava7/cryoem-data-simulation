@@ -1,16 +1,24 @@
 # cryoem-data-simulation
 
-Python3 tools for simulating cryoEM particle data.
+Python3 tools for simulating cryoEM particle data, analyzing alignments, perturbing data, and more.
 
-Built with code from https://github.com/mbrubake/cryoem-cvpr2015
+Built with help from https://github.com/mbrubake/cryoem-cvpr2015 and https://github.com/asarnow/pyem.
 
 ### Features
 **Data Simulation**
-* `simulate_particles.py`: Core script for parallel simulation of cryoEM particle stacks.
-* `simulate_dual_stacks.py`: Simulate two stacks from two different volumes (e.g. to compare reconstructions)
+* `simulate_particles.py`: Core script for multithreaded simulation of cryoEM particle stacks.
+* `simulate_dual_stacks.py`: Simulate two stacks from two different volumes but match noise, ctf, and projection angle per particle between the stacks.
+* `simulate_dual_stacks_rv.py`: Like `simulate_dual_stacks` but specify two **sets** of input volumes and probability weights (e.g. to model particle heterogeneity or classes).
 
 **Alignment Analysis**
 * `analyze_alignment.py`: Given experimental alignment parameters (e.g. cisTEM .par file) and theoretical parameters (e.g. from `simulate_dual_stacks.py`) from two different reconstructions, compare the distributions of angular and positional  errors.
+
+**Tellurification**
+* `tellurify.py`: Replace methionines with telluromethionines or phenylalanines with tellurienylalanines in a PDB file.
+
+**Data Perturbation**
+* `perturb_alignment.py`: Given a star file with some Euler angles, perturb these orientations by a characteristic overall angular error.
+
 
 ### Usage
 
