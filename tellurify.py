@@ -149,7 +149,7 @@ def main(args):
 		print("Loaded PDB and found %d phenylalanines." % len(F))
 
 		# Get the TePhe rigid body
-		tephe_structure = parser.get_structure('tephe', 'tephe_rectified.pdb')
+		tephe_structure = parser.get_structure('tephe', 'reference/tephe_rectified.pdb')
 		tephe_resi = list(tephe_structure[0].get_residues())[0]
 
 		# Make a dictionary with all the necessary TePhe atoms (ring plus beta carbon)
