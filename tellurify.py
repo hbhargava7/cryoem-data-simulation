@@ -1,5 +1,7 @@
 # tellurify.py -i 6ac9.pdb -o 6ac9_TePhe.pdb --type tephe --exclude_residues 2 5 --ringflip_residues 3 5
 
+# Note: The TePhe ring plane is aligned with the existing Phe ring plane using a brute force method. This can be substantially improved (see notebook).
+
 import sys
 import copy
 import math
