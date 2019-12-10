@@ -32,7 +32,8 @@ def computePerturbedAngle(q1, theta):
     u1 = np.random.uniform(0,1,1)
     u2 = np.random.uniform(0,1,1)
 
-    dq1 = z = 2*u1 - 1
+    z = 2*u1 - 1
+    dq1 = z
     dq2 = np.sqrt(1-z**2)*np.cos(2*np.pi*u2)
     dq3 = np.sqrt(1-z**2)*np.sin(2*np.pi*u2)
 
@@ -44,8 +45,10 @@ def computePerturbedAngle(q1, theta):
 
     dq = [dq0, dq1, dq2, dq3]
 
-    qx = quatMult(quatMult(dq,q1),quatConj(dq))
+    # qx = quatMult(quatMult(dq,q1),quatConj(dq))
+    qx = quatMult(dq,q1)
 
+    print("Distance: %.2f" % quatDist(q1,qx))
     return qx
 
 # Euler angles to Quaternion (from https://github.com/asarnow/pyem geom.py)
